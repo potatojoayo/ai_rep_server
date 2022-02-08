@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres_service
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  django:
+    container_name: django_service
+    build: .
+    command: python manage.py runserver 0.0.0.0:8001
+    volumes:
+      - .:/server
+    ports:
+      - "8001:8001"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - postgres
